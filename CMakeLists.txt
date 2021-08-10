@@ -309,3 +309,26 @@ if(NOT EMSCRIPTEN)
   endif (MFEM_USE_GNUTLS)
 
 endif(NOT EMSCRIPTEN)
+
+add_custom_command(
+    OUTPUT
+        GLVis.app
+        GLVis.app/Contents/Info.plist
+        GLVis.app/Contents/MacOS/glvis
+        GLVis.app/Contents/Resources/GLVis.icns
+    COMMAND ${CMAKE_COMMAND} -E make_directory GLVis.app/Contents/MacOS
+    COMMAND ${CMAKE_COMMAND} -E make_directory GLVis.app/Contents/Resources
+    COMMAND ${CMAKE_COMMAND} -E copy glvis GLVis.app/Contents/MacOS
+    COMMAND ${CMAKE_COMMAND} -E copy
+        ${CMAKE_CURRENT_SOURCE_DIR}/share/Info.plist GLVis.app/Contents
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/share/rgba2icns.sh
+        ${CMAKE_CURRENT_SOURCE_DIR}/share/logo.rgba
+        GLVis.app/Contents/Resources/GLVis.icns
+    DEPENDS glvis-exe)
+
+add_custom_target(
+    app
+    DEPENDS
+        GLVis.app/Contents/Info.plist
+        GLVis.app/Contents/MacOS/glvis
+        GLVis.app/Contents/Resources/GLVis.icns)
